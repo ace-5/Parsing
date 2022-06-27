@@ -17,14 +17,6 @@ def return_after_cleaning(lines):
 lines = return_file_content('raw_data.txt')
 cleaned_data = return_after_cleaning(lines)
 
-# with open ('raw_data.txt') as f:
-#     lines = f.readlines()
-
-# file_line = []
-# for line in lines:
-#     file_line.append(line.strip().replace('    ', ',').split(','))
-
-
 for items in cleaned_data:
     if len(items)==3:
         parsed.append({'State': items[0]})
