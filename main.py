@@ -1,53 +1,43 @@
 import csv
 
 parsed = []
+count = 0
 
-def get_data_lines(file):
+def return_file_content(file):
     with open (file) as f:
         lines = f.readlines()
+    return lines
+
+def return_after_cleaning(lines): 
+    file_line = []
+    for line in lines:
+        file_line.append(line.strip().replace('    ', ',').split(','))
+    return file_line
     
-    return lines[5:]
+lines = return_file_content('raw_data.txt')
+cleaned_data = return_after_cleaning(lines)
+
+# with open ('raw_data.txt') as f:
+#     lines = f.readlines()
+
+# file_line = []
+# for line in lines:
+#     file_line.append(line.strip().replace('    ', ',').split(','))
 
 
-def remove_whitespace(lines):
-    line = []
-    for aLine in lines:
-        line.append(aLine.strip())
-
-    return line
-
-def make_each_word_listItem(lines):
-    line = []
-    for i in range(len(lines)):
-        line.append(lines[i].split())
-    return line
-
-file_lines = get_data_lines('raw_data.txt')
-no_following_whitespace = remove_whitespace(file_lines)
-lines_to_parse = make_each_word_listItem(no_following_whitespace)
-
-count = 0
-for items in lines_to_parse:
-    for i in range(len(items)):
-        if len(items[i]) > 2:
-            if not (len(items[i+1])>2 or len(items[i+2])>2):
-                parsed.append(dict())
-                parsed[count]['State'] = items[i]
+for items in cleaned_data:
+    if len(items)==3:
+        parsed.append({'State': items[0]})
+        parsed[count]['Postal Abbr.'] = items[1]
+        parsed[count]['FIPS Code'] = items[2]
+        count+=1
+    if len(items)==6:
+        for i in range(6):
+            if i%3==0:
+                parsed.append({'State': items[i]})
                 parsed[count]['Postal Abbr.'] = items[i+1]
                 parsed[count]['FIPS Code'] = items[i+2]
                 count +=1
-            else:
-                parsed.append(dict())
-                if len(items[i+2])>2:
-                    parsed[count]['State'] = items[i]+' '+items[i+1]+' '+items[i+2]
-                    parsed[count]['Postal Abbr.'] = items[i+3]
-                    parsed[count]['FIPS Code'] = items[i+4]
-                    count +=1
-                else:
-                    parsed[count]['State'] = items[i]+' '+items[i+1]
-                    parsed[count]['Postal Abbr.'] = items[i+2]
-                    parsed[count]['FIPS Code'] = items[i+3]
-                    count+=1
 
 
 columns = ['State', 'Postal Abbr.', 'FIPS Code']

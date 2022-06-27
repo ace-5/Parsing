@@ -1,18 +1,21 @@
 import unittest
 import main
 
-class TestParserProgram(unittest.TestCase):
-    def test_get_file(self):
-        self.assertIsInstance(main.get_data_lines('raw_data.txt'), list, msg= "Returned Obejct is not list")
+class TestParserProgram(unittest.TestCase):    
+    def test_return_file_content(self):
+        self.assertIsInstance(main.return_file_content('raw_data.txt'), list, msg="FileNameError")
+    
+    def test_return_after_cleaning(self):
+        lines = main.return_file_content('raw_data.txt')
+        should_be_equal = [['State', 'Postal'],
+                            ['Abbr.', 'FIPS'],
+                            ['Code', 'State', 'Postal'],
+                            ['Abbr.', 'FIPS'],
+                            ['Code'],
+                            ['Alabama', 'AL', '01', 'Nebraska', 'NE', '31']]
+        for i in range(6):
+            self.assertListEqual(main.return_after_cleaning(lines)[i], should_be_equal[i])
 
-    def test_remove_whitespace(self):
-        mystring = ["Hello From\n", "the other side\n"]
-        self.assertIsInstance(main.remove_whitespace(mystring), list, msg="Pass list which contains string as argument")
-        
-    def test_to_make_string_individual(self):
-        myList = ["Hello from", "the other side"]
-        expected = ["Hello", "from", "the", "other", "side"]
-        self.assertEqual(main.make_each_word_listItem(myList), expected, msg="Function doesnot returns expected lsit")
     
 if __name__ == "main":
     unittest.main()
