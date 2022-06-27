@@ -13,30 +13,31 @@ def return_after_cleaning(lines):
     for line in lines:
         file_line.append(line.strip().replace('    ', ',').split(','))
     return file_line
-    
+
+def parser(items):
+    return({
+        'State': items[0],
+        'Postal Abbr.': items[1],
+        'FIPS Code': items[2]
+    })
+
 lines = return_file_content('raw_data.txt')
 cleaned_data = return_after_cleaning(lines)
 
+
 for items in cleaned_data:
     if len(items)==3:
-        parsed.append({'State': items[0]})
-        parsed[count]['Postal Abbr.'] = items[1]
-        parsed[count]['FIPS Code'] = items[2]
-        count+=1
+        parsed.append(parser(items))
     if len(items)==6:
-        for i in range(6):
-            if i%3==0:
-                parsed.append({'State': items[i]})
-                parsed[count]['Postal Abbr.'] = items[i+1]
-                parsed[count]['FIPS Code'] = items[i+2]
-                count +=1
+        parsed.append(parser(items[:3]))
+        parsed.append(parser(items[3:]))
 
 
 columns = ['State', 'Postal Abbr.', 'FIPS Code']
 with open('result.csv', 'w') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames = columns)
     writer.writeheader()
-    writer.writerows(parsed)
+    writer.writerows(parsed[1:])
 
 
 

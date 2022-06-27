@@ -16,6 +16,11 @@ class TestParserProgram(unittest.TestCase):
         for i in range(6):
             self.assertListEqual(main.return_after_cleaning(lines)[i], should_be_equal[i])
 
+    def test_parser(self):
+        data_to_be_parsed = ['Alabama', 'AL', '01']
+        data_it_should_return = {'State': 'Alabama', 'Postal Abbr.': 'AL', 'FIPS Code': '01'}
+        self.assertDictEqual(main.parser(data_to_be_parsed), data_it_should_return)
+
     
 if __name__ == "main":
     unittest.main()
